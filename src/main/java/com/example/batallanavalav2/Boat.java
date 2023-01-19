@@ -30,7 +30,7 @@ public class Boat {
         this.botonEmpezar = botonEmpezar;
         random = new Random();
         //create the timeline
-        timeline = new Timeline(new KeyFrame(Duration.seconds(0.03), e -> move()));
+        timeline = new Timeline(new KeyFrame(Duration.seconds(0.01), e -> move()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
