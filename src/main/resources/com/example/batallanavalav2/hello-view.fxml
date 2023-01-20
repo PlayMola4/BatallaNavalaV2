@@ -5,10 +5,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.batallanavalav2.HelloController">
+<AnchorPane id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@../../../css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.batallanavalav2.HelloController">
    <children>
       <Button fx:id="btnEmpezar" layoutX="481.0" layoutY="718.0" mnemonicParsing="false" onAction="#btnEmpezar" text="Empezar" />
-      <ImageView fx:id="imgDestructor" fitHeight="120.0" fitWidth="147.0" layoutX="14.0" layoutY="393.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgDestructor" fitHeight="7.0" fitWidth="45.0" layoutX="14.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true" scaleY="2.5">
+         <image>
+            <Image url="@../../../imagenes/destructor3.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgDestructor1" fitHeight="7.0" fitWidth="45.0" layoutX="933.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true" scaleY="2.5">
          <image>
             <Image url="@../../../imagenes/destructor3.png" />
          </image>

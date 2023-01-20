@@ -9,7 +9,7 @@ import javafx.util.Duration;
 
 import java.util.Random;
 
-public class Boat {
+public class Destructor {
     private Label label;
     private double speed = 5; // 5 pixels per second
     private double xDirection = 1; // 1 for right, -1 for left
@@ -23,12 +23,13 @@ public class Boat {
 
     private ImageView barco;
 
-    public Boat(ImageView barco, double windowWidth, double windowHeight, Button botonEmpezar) {
+    public Destructor(ImageView barco, double windowWidth, double windowHeight, Button botonEmpezar) {
         this.barco = barco;
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
         this.botonEmpezar = botonEmpezar;
         random = new Random();
+        initialize();
         //create the timeline
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.03), e -> move()));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -43,7 +44,7 @@ public class Boat {
         int numeroAleatorio = (int) (Math.random()*2+1);
 
         // Cuando rebota en el lado derecho de la pantalla
-        if (barco.getLayoutX() >= 988 && yDirection == 1) {
+        if (barco.getLayoutX() >= 999 && yDirection == 1) {
             System.out.println("[LADO: DERECHO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
             xDirection = -1;
             barco.setRotate(0);
@@ -51,7 +52,7 @@ public class Boat {
             numeroAleatorio = (int) (Math.random()*2+1);
         }
 
-        if (barco.getLayoutX() >= 988 && yDirection == 1 && numeroAleatorio == 2) {
+        if (barco.getLayoutX() >= 999 && yDirection == 1 && numeroAleatorio == 2) {
             System.out.println("[LADO: DERECHO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
             xDirection = -1;
             yDirection = -1;
@@ -60,7 +61,7 @@ public class Boat {
             numeroAleatorio = (int) (Math.random()*2+1);
         }
 
-        if (barco.getLayoutX() >= 988 && yDirection == -1) {
+        if (barco.getLayoutX() >= 999 && yDirection == -1) {
             System.out.println("[LADO: DERECHO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
             xDirection = -1;
             barco.setRotate(0);
@@ -81,7 +82,7 @@ public class Boat {
             xDirection = 1;
             yDirection = 1;
             barco.setRotate(0);
-            barco.setRotate(315);
+            barco.setRotate(225);
             numeroAleatorio = (int) (Math.random()*2+1);
         }
 
@@ -114,7 +115,7 @@ public class Boat {
             System.out.println("[LADO: ARRIBA] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
             yDirection = 1;
             barco.setRotate(0);
-            barco.setRotate(335);
+            barco.setRotate(135);
         }
 
         //Cuando rebota abajo de la pantalla
@@ -141,6 +142,8 @@ public class Boat {
             barco.setRotate(0);
             barco.setRotate(225);
         }
-
+    }
+    public void initialize() {
+        barco.setRotate(45);
     }
 }
