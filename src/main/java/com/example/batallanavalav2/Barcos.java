@@ -9,9 +9,15 @@ import javafx.util.Duration;
 
 import java.util.Random;
 
-public class Destructor {
-    private Label label;
-    private double speed = 5; // 5 pixels per second
+public class Barcos {
+    private String nombreBarco;
+    private double velocidad = 5; // 5 pixels per second
+
+    private int vida;
+
+    private int potenciaFuego;
+
+    private int sonar;
     private double xDirection = 1; // 1 for right, -1 for left
     private double yDirection = 1; // 1 for down, -1 for up
     private double windowWidth;
@@ -21,10 +27,33 @@ public class Destructor {
 
     private Button botonEmpezar;
 
-    private ImageView barco;
+    private ImageView imagenBarco;
 
-    public Destructor(ImageView barco, double windowWidth, double windowHeight, Button botonEmpezar) {
-        this.barco = barco;
+    public Barcos(String nombreBarco, ImageView imagenBarco, double windowWidth, double windowHeight, Button botonEmpezar) {
+
+        if (nombreBarco.equals("destructor")) {
+            velocidad = 5;
+            potenciaFuego = 50;
+            vida = 80;
+            sonar = 15;
+        } else if (nombreBarco.equals("acorazado")) {
+            velocidad = 3;
+            potenciaFuego = 80;
+            vida = 120;
+            sonar = 20;
+        } else if (nombreBarco.equals("submarino")) {
+            velocidad = 2;
+            potenciaFuego = 60;
+            vida = 30;
+            sonar = 20;
+        } else if (nombreBarco.equals("lancha")) {
+            velocidad = 10;
+            potenciaFuego = 60;
+            vida = 30;
+            sonar = 20;
+        }
+
+        this.imagenBarco = imagenBarco;
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
         this.botonEmpezar = botonEmpezar;

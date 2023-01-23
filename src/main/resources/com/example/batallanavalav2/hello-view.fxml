@@ -10,7 +10,7 @@
       <Button fx:id="btnEmpezar" layoutX="481.0" layoutY="718.0" mnemonicParsing="false" onAction="#btnEmpezar" text="Empezar" />
       <ImageView fx:id="imgDestructor" fitHeight="7.0" fitWidth="45.0" layoutX="14.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true" scaleY="2.5">
          <image>
-            <Image url="@../../../imagenes/destructor3.png" />
+            <Image url="@../../../imagenes/destructorRojo.png" />
          </image>
       </ImageView>
       <ImageView fx:id="imgDestructor1" fitHeight="7.0" fitWidth="45.0" layoutX="933.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true" scaleY="2.5">

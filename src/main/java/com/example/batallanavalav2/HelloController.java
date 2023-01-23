@@ -27,7 +27,7 @@ public class HelloController {
 
     @FXML
     public void btnEmpezar(ActionEvent actionEvent) {
-        Destructor destructor = new Destructor(imgDestructor, 1024, 768, btnEmpezar);
-        Destructor destructor2 = new Destructor(imgDestructor1, 1024, 768, btnEmpezar);
+        Barcos destructor = new Barcos(imgDestructor, 1024, 768, btnEmpezar);
+        Barcos destructor2 = new Barcos(imgDestructor1, 1024, 768, btnEmpezar);
     }
 }
