@@ -1,178 +1,138 @@
 package com.example.batallanavalav2;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 
 import java.util.Random;
 
 public class Barcos {
     private String nombreBarco;
-    private double velocidad = 5; // 5 pixels per second
-
     private int vida;
-
-    private int potenciaFuego;
-
+    private int velocidad;
     private int sonar;
-    private double xDirection = 1; // 1 for right, -1 for left
-    private double yDirection = 1; // 1 for down, -1 for up
-    private double windowWidth;
-    private double windowHeight;
-    private Timeline timeline;
-    private Random random;
-
-    private Button botonEmpezar;
-
+    private int potenciaFuego;
     private ImageView imagenBarco;
 
-    public Barcos(String nombreBarco, ImageView imagenBarco, double windowWidth, double windowHeight, Button botonEmpezar) {
+    private String equipo;
+    private double x;
+
+    private double direction;
+
+    public Barcos(String nombreBarco, ImageView imagenBarco, String equipo) {
+        this.nombreBarco = nombreBarco;
+        this.imagenBarco = imagenBarco;
+        this.equipo = equipo;
+
+        this.direction = 45;
 
         if (nombreBarco.equals("destructor")) {
             velocidad = 5;
             potenciaFuego = 50;
             vida = 80;
             sonar = 15;
+            imagenBarco.setFitHeight(15);
+            imagenBarco.setFitWidth(45);
         } else if (nombreBarco.equals("acorazado")) {
             velocidad = 3;
             potenciaFuego = 80;
             vida = 120;
             sonar = 20;
+            imagenBarco.setFitHeight(25);
+            imagenBarco.setFitWidth(55);
         } else if (nombreBarco.equals("submarino")) {
             velocidad = 2;
             potenciaFuego = 60;
             vida = 30;
-            sonar = 20;
+            imagenBarco.setFitHeight(15);
+            imagenBarco.setFitWidth(35);
         } else if (nombreBarco.equals("lancha")) {
             velocidad = 10;
             potenciaFuego = 60;
             vida = 30;
             sonar = 20;
+            imagenBarco.setFitHeight(15);
+            imagenBarco.setFitWidth(25);
         }
+    }
 
+    public int shoot() {
+        Random random = new Random();
+        int numeroRandom = random.nextInt(100);
+        if (numeroRandom < 25) {
+            return potenciaFuego = 0;
+        } else if (numeroRandom <= 50) {
+            return potenciaFuego / 2;
+        } else {
+            return potenciaFuego;
+        }
+    }
+
+    public String getNombreBarco() {
+        return nombreBarco;
+    }
+
+    public void setNombreBarco(String nombreBarco) {
+        this.nombreBarco = nombreBarco;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+
+    public int getVelocidad() {
+        return velocidad;
+    }
+
+    public void setVelocidad(int velocidad) {
+        this.velocidad = velocidad;
+    }
+
+    public int getSonar() {
+        return sonar;
+    }
+
+    public void setSonar(int sonar) {
+        this.sonar = sonar;
+    }
+
+    public int getPotenciaFuego() {
+        return potenciaFuego;
+    }
+
+    public void setPotenciaFuego(int potenciaFuego) {
+        this.potenciaFuego = potenciaFuego;
+    }
+
+    public ImageView getImagenBarco() {
+        return imagenBarco;
+    }
+
+    public void setImagenBarco(ImageView imagenBarco) {
         this.imagenBarco = imagenBarco;
-        this.windowWidth = windowWidth;
-        this.windowHeight = windowHeight;
-        this.botonEmpezar = botonEmpezar;
-        random = new Random();
-        initialize();
-        //create the timeline
-        timeline = new Timeline(new KeyFrame(Duration.seconds(0.03), e -> move()));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
     }
 
-    private void move() {
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getDirection() {
+        return direction;
+    }
+
+    public void setDirection(double direction) {
+        this.direction = direction;
+    }
+
+    private void movimiento(Double positionX, Double positionY) {
         // Movimiento del Barco y su velocidad
-        barco.setLayoutX(barco.getLayoutX() + speed * xDirection);
-        barco.setLayoutY(barco.getLayoutY() + speed * yDirection);
-
-        int numeroAleatorio = (int) (Math.random()*2+1);
-
-        // Cuando rebota en el lado derecho de la pantalla
-        if (barco.getLayoutX() >= 999 && yDirection == 1) {
-            System.out.println("[LADO: DERECHO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            xDirection = -1;
-            barco.setRotate(0);
-            barco.setRotate(135);
-            numeroAleatorio = (int) (Math.random()*2+1);
-        }
-
-        if (barco.getLayoutX() >= 999 && yDirection == 1 && numeroAleatorio == 2) {
-            System.out.println("[LADO: DERECHO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            xDirection = -1;
-            yDirection = -1;
-            barco.setRotate(0);
-            barco.setRotate(225);
-            numeroAleatorio = (int) (Math.random()*2+1);
-        }
-
-        if (barco.getLayoutX() >= 999 && yDirection == -1) {
-            System.out.println("[LADO: DERECHO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            xDirection = -1;
-            barco.setRotate(0);
-            barco.setRotate(45);
-        }
-
-        // Cuando rebota en el lado izquierdo de la pantalla
-        if (barco.getLayoutX() <= 0 && yDirection == 1) {
-            System.out.println("[LADO: IZQUIERDO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            xDirection = 1;
-            barco.setRotate(0);
-            barco.setRotate(45);
-            numeroAleatorio = (int) (Math.random()*2+1);
-        }
-
-        if (barco.getLayoutX() <= 0 && yDirection == 1 && numeroAleatorio == 2) {
-            System.out.println("[LADO: IZQUIERDO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            xDirection = 1;
-            yDirection = 1;
-            barco.setRotate(0);
-            barco.setRotate(225);
-            numeroAleatorio = (int) (Math.random()*2+1);
-        }
-
-        if (barco.getLayoutX() <= 0 && yDirection == -1) {
-            System.out.println("[LADO: IZQUIERDO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            xDirection = 1;
-            barco.setRotate(0);
-            barco.setRotate(135);
-        }
-
-        //Cuando rebota arriba de la pantalla
-        if (barco.getLayoutY() <= 0 && xDirection == 1) {
-            System.out.println("[LADO: ARRIBA] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            yDirection = 1;
-            barco.setRotate(0);
-            barco.setRotate(225);
-            numeroAleatorio = (int) (Math.random()*2+1);
-        }
-
-        if (barco.getLayoutY() <= 0 && xDirection == -1 && numeroAleatorio == 2) {
-            System.out.println("[LADO: ARRIBA] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            yDirection = 1;
-            xDirection = 1;
-            barco.setRotate(0);
-            barco.setRotate(45);
-            numeroAleatorio = (int) (Math.random()*2+1);
-        }
-
-        if (barco.getLayoutY() <= 0 && xDirection == -1) {
-            System.out.println("[LADO: ARRIBA] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            yDirection = 1;
-            barco.setRotate(0);
-            barco.setRotate(135);
-        }
-
-        //Cuando rebota abajo de la pantalla
-        if (barco.getLayoutY() >= 751 && xDirection == 1) {
-            System.out.println("[LADO: ABAJO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            yDirection = -1;
-            barco.setRotate(0);
-            barco.setRotate(315);
-            numeroAleatorio = (int) (Math.random()*2+1);
-        }
-
-        if (barco.getLayoutY() >= 751 && xDirection == 1 && numeroAleatorio == 2) {
-            System.out.println("[LADO: ABAJO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            yDirection = -1;
-            xDirection = -1;
-            barco.setRotate(0);
-            barco.setRotate(135);
-            numeroAleatorio = (int) (Math.random()*2+1);
-        }
-
-        if (barco.getLayoutY() >= 751 && xDirection == -1) {
-            System.out.println("[LADO: ABAJO] Se ha generado el numero: " + numeroAleatorio + " de forma aleatoria");
-            yDirection = -1;
-            barco.setRotate(0);
-            barco.setRotate(225);
-        }
-    }
-    public void initialize() {
-        barco.setRotate(45);
+        imagenBarco.setLayoutX(positionX);
+        imagenBarco.setLayoutY(positionY);
     }
 }
