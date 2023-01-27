@@ -37,4 +37,8 @@ public class MovimientoGeneral {
         double distancia = coordenadasDosBarcos(barcos1, barcos2);
         return distancia <= barcos1.getSonar();
     }
+
+    public static void rotar(Barcos barcos, double grados) {
+        barcos.getImagenBarco().setRotate(barcos.getImagenBarco() .getRotate() + grados);
+    }
 }

@@ -28,14 +28,14 @@ public class Barcos {
             velocidad = 5;
             potenciaFuego = 50;
             vida = 80;
-            sonar = 15;
+            sonar = 150;
             imagenBarco.setFitHeight(15);
             imagenBarco.setFitWidth(45);
         } else if (nombreBarco.equals("acorazado")) {
             velocidad = 3;
             potenciaFuego = 80;
             vida = 120;
-            sonar = 20;
+            sonar = 200;
             imagenBarco.setFitHeight(25);
             imagenBarco.setFitWidth(55);
         } else if (nombreBarco.equals("submarino")) {
@@ -48,7 +48,7 @@ public class Barcos {
             velocidad = 10;
             potenciaFuego = 60;
             vida = 30;
-            sonar = 20;
+            sonar = 75;
             imagenBarco.setFitHeight(15);
             imagenBarco.setFitWidth(25);
         }
