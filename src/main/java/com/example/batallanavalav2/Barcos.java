@@ -1,10 +1,17 @@
 package com.example.batallanavalav2;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Barcos {
+
+    private Timeline movimiento;
     private String nombreBarco;
     private int vida;
     private int velocidad;
@@ -15,11 +22,17 @@ public class Barcos {
     private String equipo;
     private double x;
 
+    private ArrayList<Barcos> barcos;
+
+    private AnchorPane ventana;
+
     private double direction;
 
-    public Barcos(String nombreBarco, ImageView imagenBarco, String equipo) {
+    public Barcos(String nombreBarco, ImageView imagenBarco, String equipo, ArrayList<Barcos> barcos, AnchorPane anchorPane) {
         this.nombreBarco = nombreBarco;
         this.imagenBarco = imagenBarco;
+        this.barcos = barcos;
+        this.ventana = anchorPane;
         this.equipo = equipo;
 
         this.direction = 45;
@@ -52,6 +65,10 @@ public class Barcos {
             imagenBarco.setFitHeight(15);
             imagenBarco.setFitWidth(25);
         }
+
+        movimiento = new Timeline(new KeyFrame(Duration.seconds(0.05), e ->{
+            gameOver();
+        }));
     }
 
     public int shoot() {
@@ -66,6 +83,31 @@ public class Barcos {
         }
     }
 
+    public synchronized void gameOver() {
+        int equipoRojo = 0;
+        int equipoAzul = 0;
+        int contadorFor = 0;
+        for (Barcos barcos : barcos) {
+            if (barcos.getVida() > 0) {
+
+                if (barcos.getEquipo().equals("Rojo")) {
+                    equipoRojo++;
+                } else {
+                    equipoAzul++;
+                }
+            }
+            contadorFor++;
+        }
+
+        if (equipoRojo >= 1 && equipoAzul == 0) {
+            movimiento.stop();
+        }
+
+        if (equipoAzul >= 1 && equipoRojo == 0) {
+            movimiento.stop();
+        }
+
+    }
     public String getNombreBarco() {
         return nombreBarco;
     }
@@ -76,6 +118,30 @@ public class Barcos {
 
     public int getVida() {
         return vida;
+    }
+
+    public String getEquipo() {
+        return equipo;
+    }
+
+    public void setEquipo(String equipo) {
+        this.equipo = equipo;
+    }
+
+    public ArrayList<Barcos> getBarcos() {
+        return barcos;
+    }
+
+    public void setBarcos(ArrayList<Barcos> barcos) {
+        this.barcos = barcos;
+    }
+
+    public AnchorPane getVentana() {
+        return ventana;
+    }
+
+    public void setVentana(AnchorPane ventana) {
+        this.ventana = ventana;
     }
 
     public void setVida(int vida) {
