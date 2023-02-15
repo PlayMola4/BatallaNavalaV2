@@ -11,12 +11,13 @@ import java.util.Random;
 
 public class Barcos {
 
-    private Timeline movimiento;
+    private Timeline movimientoBarcos;
     private String nombreBarco;
     private int vida;
     private int velocidad;
     private int sonar;
     private int potenciaFuego;
+    private boolean modoDeDisparo;
     private ImageView imagenBarco;
 
     private String equipo;
@@ -28,12 +29,16 @@ public class Barcos {
 
     private double direction;
 
+    private int recargaCaniones;
+
+
     public Barcos(String nombreBarco, ImageView imagenBarco, String equipo, ArrayList<Barcos> barcos, AnchorPane anchorPane) {
         this.nombreBarco = nombreBarco;
         this.imagenBarco = imagenBarco;
         this.barcos = barcos;
         this.ventana = anchorPane;
         this.equipo = equipo;
+        this.recargaCaniones = 0;
 
         this.direction = 45;
 
@@ -66,12 +71,20 @@ public class Barcos {
             imagenBarco.setFitWidth(25);
         }
 
-        movimiento = new Timeline(new KeyFrame(Duration.seconds(0.05), e ->{
-            gameOver();
+        movimientoBarcos = new Timeline(new KeyFrame(Duration.seconds(0.05), e ->{
+            if(!modoDeDisparo) {
+                partidaTerminada();
+                deteccionBarcosCercanos();
+                movimientoBarco();
+                detectarBordesVentana();
+            }
+            partidaTerminada();
         }));
+        movimientoBarcos.setCycleCount(Timeline.INDEFINITE);
+        movimientoBarcos.play();
     }
 
-    public int shoot() {
+    public synchronized int shoot() {
         Random random = new Random();
         int numeroRandom = random.nextInt(100);
         if (numeroRandom < 25) {
@@ -83,30 +96,63 @@ public class Barcos {
         }
     }
 
-    public synchronized void gameOver() {
-        int equipoRojo = 0;
-        int equipoAzul = 0;
-        int contadorFor = 0;
-        for (Barcos barcos : barcos) {
-            if (barcos.getVida() > 0) {
+    public synchronized void movimientoBarco() {
+        double x = this.getImagenBarco().getLayoutX();
+        double y = this.getImagenBarco().getLayoutY();
+        double velocidad = this.getVelocidad();
+        double direccion = Math.toRadians(this.getDirection());
+        x += velocidad * Math.cos(direccion);
+        y += velocidad * Math.sin(direccion);
+        this.getImagenBarco().setLayoutX(x);
+        this.getImagenBarco().setLayoutY(y);
+        this.getImagenBarco().setRotate(this.getDirection());
+    }
 
-                if (barcos.getEquipo().equals("Rojo")) {
-                    equipoRojo++;
-                } else {
-                    equipoAzul++;
-                }
+    public synchronized void eliminarBarco() {
+        barcos.remove(barcos.indexOf(this));
+    }
+
+    public synchronized void partidaTerminada() {
+        if (barcos.size() == 1) {
+            movimientoBarcos.stop();
+
+            eliminarBarco();
+        }
+
+    }
+
+    public synchronized void deteccionBarcosCercanos() {
+        if (recargaCaniones == 0) {
+            recargaCaniones = 0;
+        }
+
+        if (recargaCaniones > 0) {
+
+            recargaCaniones -= 1;
+
+        }
+
+        for (Barcos barco : barcos) {
+            if (barco == this) {
+                continue;
             }
-            contadorFor++;
-        }
+            double distancia = Math.sqrt(Math.pow(barco.getImagenBarco().getLayoutX() - this.getImagenBarco().getLayoutX(), 2) +
+                    Math.pow(barco.getImagenBarco().getLayoutY() - this.getImagenBarco().getLayoutY(), 2));
 
-        if (equipoRojo >= 1 && equipoAzul == 0) {
-            movimiento.stop();
-        }
+            if (distancia < 20 && recargaCaniones == 0 && getVida() >0 && this.getEquipo() != barco.getEquipo()) {
 
-        if (equipoAzul >= 1 && equipoRojo == 0) {
-            movimiento.stop();
+                recargaCaniones += 30;
+                int disparar = this.shoot();
+                System.out.println("El barco: " + this.getNombreBarco()+"  | del equipo: "+ this.getEquipo() + " dispara a: " + barco.getNombreBarco()+ " "+barco.getEquipo());
+                System.out.println("Le quita: " + disparar + " daño");
+                barco.setVida(barco.getVida() - disparar);
+                System.out.println("Le queda de vida: " + barco.getVida());
+            }
         }
+    }
 
+    public synchronized void detectarBordesVentana() {
+        MovimientoGeneral.detectarBordes(this);
     }
     public String getNombreBarco() {
         return nombreBarco;
@@ -197,7 +243,6 @@ public class Barcos {
     }
 
     private void movimiento(Double positionX, Double positionY) {
-        // Movimiento del Barco y su velocidad
         imagenBarco.setLayoutX(positionX);
         imagenBarco.setLayoutY(positionY);
     }

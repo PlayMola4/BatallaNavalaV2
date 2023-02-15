@@ -30,7 +30,10 @@ public class HelloController {
     private Timeline timeline;
     private Random random;
     @FXML
-    private AnchorPane anchorPane;
+    private AnchorPane principal;
+    private AnchorPane equipoAzul;
+    private AnchorPane equipoRojo;
+    private AnchorPane marcaGlobal;
 
     private Barcos barcoRojo;
     private Barcos barcoAzul;
@@ -51,7 +54,7 @@ public class HelloController {
 
         barcoAzul = new Barcos("acorazado",destructorAzul, "Azul");
 
-        anchorPane.getChildren().addAll(barcoRojo.getImagenBarco(), barcoAzul.getImagenBarco());
+        principal.getChildren().addAll(barcoRojo.getImagenBarco(), barcoAzul.getImagenBarco());
     }
     @FXML
     public void btnEmpezar(ActionEvent actionEvent) {
@@ -59,7 +62,7 @@ public class HelloController {
 
             MovimientoGeneral.mover(barcoRojo);
             MovimientoGeneral.detectarBordes(barcoRojo);
-            if (MovimientoGeneral.detectarBarcoPorSonar(barcoRojo, barcoAzul)) {
+            if (MovimientoGeneral.detectarBarcos(barcoRojo, barcoAzul)) {
 
                 int disparo = barcoRojo.shoot();
                 System.out.println(barcoRojo.getNombreBarco() + " dispara a: " + barcoAzul.getNombreBarco() + " y le quita: " + disparo);
@@ -68,7 +71,7 @@ public class HelloController {
                 if (barcoAzul.getVida() <= 0) {
 
                     System.out.println("el " + barcoAzul.getNombreBarco() + " muere");
-                    anchorPane.getChildren().remove(barcoAzul.getImagenBarco());
+                    principal.getChildren().remove(barcoAzul.getImagenBarco());
                     equipoGanador();
 
 
@@ -83,7 +86,7 @@ public class HelloController {
             MovimientoGeneral.mover(barcoAzul);
             MovimientoGeneral.detectarBordes(barcoAzul);
 
-            if (MovimientoGeneral.detectarBarcoPorSonar(barcoAzul, barcoRojo)) {
+            if (MovimientoGeneral.detectarBarcos(barcoAzul, barcoRojo)) {
 
                 int disparo = barcoAzul.shoot();
                 System.out.println(barcoAzul.getNombreBarco() + " dispara a: " + barcoRojo.getNombreBarco() + " y le quita: " + disparo);
@@ -92,7 +95,7 @@ public class HelloController {
                 if (barcoRojo.getVida() <= 0) {
 
                     System.out.println("el " + barcoRojo.getNombreBarco() + " muere");
-                    anchorPane.getChildren().remove(barcoRojo.getImagenBarco());
+                    principal.getChildren().remove(barcoRojo.getImagenBarco());
 
 
                 } else {
