@@ -49,7 +49,7 @@ public class Barcos {
             velocidad = 5;
             potenciaFuego = 50;
             vida = 80;
-            sonar = 300;
+            sonar = 150;
             recargaCaniones = 6000;
             imagenBarco.setFitHeight(15);
             imagenBarco.setFitWidth(45);

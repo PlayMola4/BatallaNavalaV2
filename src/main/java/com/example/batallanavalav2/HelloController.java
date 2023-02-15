@@ -65,6 +65,7 @@ public class HelloController {
         destructorRojo.setLayoutY(371);
 
         barcoRojo = new Barcos("destructor", destructorRojo, "Rojo", controlDeJuego.getBarcos(), ventana);
+        controlDeJuego.aniadirBarcos(barcoRojo);
 
 
         ImageView destructorAzul = new ImageView();
@@ -72,7 +73,8 @@ public class HelloController {
         destructorAzul.setLayoutX(250);
         destructorAzul.setLayoutY(371);
 
-        barcoAzul = new Barcos("acorazado", destructorAzul, "Azul", controlDeJuego.getBarcos(), ventana);
+        barcoAzul = new Barcos("destructor", destructorAzul, "Azul", controlDeJuego.getBarcos(), ventana);
+        controlDeJuego.aniadirBarcos(barcoAzul);
 
         principal.getChildren().addAll(barcoRojo.getImagenBarco(), barcoAzul.getImagenBarco());
     }
