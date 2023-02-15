@@ -29,16 +29,19 @@ public class Barcos {
 
     private double direction;
 
-    private int recargaCaniones;
+    private long recargaCaniones;
+
+    private boolean isShooting;
 
 
     public Barcos(String nombreBarco, ImageView imagenBarco, String equipo, ArrayList<Barcos> barcos, AnchorPane anchorPane) {
         this.nombreBarco = nombreBarco;
         this.imagenBarco = imagenBarco;
-        this.barcos = barcos;
         this.ventana = anchorPane;
+        this.barcos = barcos;
         this.equipo = equipo;
         this.recargaCaniones = 0;
+        this.isShooting = false;
 
         this.direction = 45;
 
@@ -46,7 +49,8 @@ public class Barcos {
             velocidad = 5;
             potenciaFuego = 50;
             vida = 80;
-            sonar = 150;
+            sonar = 300;
+            recargaCaniones = 6000;
             imagenBarco.setFitHeight(15);
             imagenBarco.setFitWidth(45);
         } else if (nombreBarco.equals("acorazado")) {
@@ -54,12 +58,14 @@ public class Barcos {
             potenciaFuego = 80;
             vida = 120;
             sonar = 200;
+            recargaCaniones = 8000;
             imagenBarco.setFitHeight(25);
             imagenBarco.setFitWidth(55);
         } else if (nombreBarco.equals("submarino")) {
             velocidad = 2;
             potenciaFuego = 60;
             vida = 30;
+            recargaCaniones = 4000;
             imagenBarco.setFitHeight(15);
             imagenBarco.setFitWidth(35);
         } else if (nombreBarco.equals("lancha")) {
@@ -67,18 +73,19 @@ public class Barcos {
             potenciaFuego = 60;
             vida = 30;
             sonar = 75;
+            recargaCaniones = 2000;
             imagenBarco.setFitHeight(15);
             imagenBarco.setFitWidth(25);
         }
 
         movimientoBarcos = new Timeline(new KeyFrame(Duration.seconds(0.05), e ->{
-            if(!modoDeDisparo) {
-                partidaTerminada();
-                deteccionBarcosCercanos();
-                movimientoBarco();
-                detectarBordesVentana();
-            }
             partidaTerminada();
+            if(!modoDeDisparo) {
+                deteccionBarcosCercanos();
+                detectarBordesVentana();
+                movimientoBarco();
+            }
+            eliminarBarco();
         }));
         movimientoBarcos.setCycleCount(Timeline.INDEFINITE);
         movimientoBarcos.play();
@@ -86,14 +93,25 @@ public class Barcos {
 
     public synchronized int shoot() {
         Random random = new Random();
-        int numeroRandom = random.nextInt(100);
+        int numeroRandom = random.nextInt(101);
         if (numeroRandom < 25) {
-            return potenciaFuego = 0;
+            return 0;
         } else if (numeroRandom <= 50) {
             return potenciaFuego / 2;
         } else {
             return potenciaFuego;
         }
+    }
+
+    private long ultimoDisparo = 0;
+    public synchronized boolean recargaCaniones() {
+        long tiempoActual = System.currentTimeMillis();
+        return tiempoActual < ultimoDisparo + recargaCaniones;
+    }
+
+    public synchronized void detenerDisparoBarcos(Barcos barco1, Barcos barco2) {
+        barco1.setModoDeDisparo(true);
+        barco2.setModoDeDisparo(true);
     }
 
     public synchronized void movimientoBarco() {
@@ -109,27 +127,46 @@ public class Barcos {
     }
 
     public synchronized void eliminarBarco() {
-        barcos.remove(barcos.indexOf(this));
+        if (this.getVida() <= 0) {
+            movimientoBarcos.stop();
+            this.vida = 0;
+        }
     }
 
     public synchronized void partidaTerminada() {
-        if (barcos.size() == 1) {
-            movimientoBarcos.stop();
 
-            eliminarBarco();
+        int contadorFor = 0;
+        int Azul = 0;
+        int Rojo = 0;
+
+        for (Barcos barco : barcos) {
+            if (barco.getVida() > 0) {
+                if (barco.getEquipo().equals("Rojo")) {
+
+                    Rojo++;
+                }
+
+                if (barco.getEquipo().equals("Azul")) {
+
+                    Azul++;
+
+                }
+                contadorFor++;
+            }
         }
 
+        if (Rojo >= 1 && Azul == 0) {
+            movimientoBarcos.stop();
+        }
+
+        if (Azul >= 1 && Rojo == 0) {
+            movimientoBarcos.stop();
+        }
     }
 
     public synchronized void deteccionBarcosCercanos() {
-        if (recargaCaniones == 0) {
-            recargaCaniones = 0;
-        }
-
-        if (recargaCaniones > 0) {
-
-            recargaCaniones -= 1;
-
+        if (recargaCaniones() || getVida() <= 0) {
+            return;
         }
 
         for (Barcos barco : barcos) {
@@ -139,14 +176,19 @@ public class Barcos {
             double distancia = Math.sqrt(Math.pow(barco.getImagenBarco().getLayoutX() - this.getImagenBarco().getLayoutX(), 2) +
                     Math.pow(barco.getImagenBarco().getLayoutY() - this.getImagenBarco().getLayoutY(), 2));
 
-            if (distancia < 20 && recargaCaniones == 0 && getVida() >0 && this.getEquipo() != barco.getEquipo()) {
+            if (barco.getNombreBarco().equals("submarino")) {
+                distancia = distancia - 50;
+            }
 
-                recargaCaniones += 30;
+            if (distancia < getSonar() && this.getEquipo() != barco.getEquipo() && barco.getVida() > 0) {
+                detenerDisparoBarcos(this, barco);
+                ultimoDisparo = System.currentTimeMillis();
                 int disparar = this.shoot();
-                System.out.println("El barco: " + this.getNombreBarco()+"  | del equipo: "+ this.getEquipo() + " dispara a: " + barco.getNombreBarco()+ " "+barco.getEquipo());
+                System.out.println("El barco: " + this.getNombreBarco()+"  | del equipo: "+ this.getEquipo() + " dispara a: " + barco.getNombreBarco()+ "  | del equipo: "+barco.getEquipo());
                 System.out.println("Le quita: " + disparar + " daño");
                 barco.setVida(barco.getVida() - disparar);
                 System.out.println("Le queda de vida: " + barco.getVida());
+                break;
             }
         }
     }
@@ -154,12 +196,52 @@ public class Barcos {
     public synchronized void detectarBordesVentana() {
         MovimientoGeneral.detectarBordes(this);
     }
+
+    public synchronized void moverTodosLosBarcos() {
+        for (Barcos barco : barcos) {
+
+            barco.setModoDeDisparo(false);
+
+        }
+    }
     public String getNombreBarco() {
         return nombreBarco;
     }
 
     public void setNombreBarco(String nombreBarco) {
         this.nombreBarco = nombreBarco;
+    }
+
+    public Timeline getMovimientoBarcos() {
+        return movimientoBarcos;
+    }
+
+    public void setMovimientoBarcos(Timeline movimientoBarcos) {
+        this.movimientoBarcos = movimientoBarcos;
+    }
+
+    public boolean isModoDeDisparo() {
+        return modoDeDisparo;
+    }
+
+    public void setModoDeDisparo(boolean modoDeDisparo) {
+        this.modoDeDisparo = modoDeDisparo;
+    }
+
+    public long getRecargaCaniones() {
+        return recargaCaniones;
+    }
+
+    public void setRecargaCaniones(int recargaCaniones) {
+        this.recargaCaniones = recargaCaniones;
+    }
+
+    public long getUltimoDisparo() {
+        return ultimoDisparo;
+    }
+
+    public void setUltimoDisparo(long ultimoDisparo) {
+        this.ultimoDisparo = ultimoDisparo;
     }
 
     public int getVida() {

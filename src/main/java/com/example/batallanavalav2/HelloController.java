@@ -11,16 +11,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
 
 import java.util.Optional;
 import java.util.Random;
 
 public class HelloController {
-
-    @FXML
-    private Button btnEmpezar;
 
     private double speed = 5; // 5 pixels per unit of time
     private double xDirection = 1; // 1 for right, -1 for left
@@ -29,8 +26,10 @@ public class HelloController {
     private double windowHeight;
     private Timeline timeline;
     private Random random;
+    private Image imagenFondo;
     @FXML
     private AnchorPane principal;
+
     private AnchorPane equipoAzul;
     private AnchorPane equipoRojo;
     private AnchorPane marcaGlobal;
@@ -38,13 +37,34 @@ public class HelloController {
     private Barcos barcoRojo;
     private Barcos barcoAzul;
 
+    ControlDeJuego controlDeJuego;
+    @FXML
+    private AnchorPane azul;
+    @FXML
+    private AnchorPane rojo;
+    @FXML
+    private AnchorPane ventana;
+
     public void initialize() {
+        controlDeJuego = new ControlDeJuego();
+
+        Image imagenFondo = new Image(getClass().getResourceAsStream("imagenes/water.jpg"));
+        ImageView background = new ImageView(imagenFondo);
+
+        principal.setBackground(new Background(new BackgroundImage(background.getImage(),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT)));
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         ImageView destructorRojo = new ImageView();
         destructorRojo.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorRojo.png")));
         destructorRojo.setLayoutX(28);
         destructorRojo.setLayoutY(371);
 
-        barcoRojo = new Barcos("destructor", destructorRojo, "Rojo");
+        barcoRojo = new Barcos("destructor", destructorRojo, "Rojo", controlDeJuego.getBarcos(), ventana);
 
 
         ImageView destructorAzul = new ImageView();
@@ -52,12 +72,12 @@ public class HelloController {
         destructorAzul.setLayoutX(250);
         destructorAzul.setLayoutY(371);
 
-        barcoAzul = new Barcos("acorazado",destructorAzul, "Azul");
+        barcoAzul = new Barcos("acorazado", destructorAzul, "Azul", controlDeJuego.getBarcos(), ventana);
 
         principal.getChildren().addAll(barcoRojo.getImagenBarco(), barcoAzul.getImagenBarco());
     }
     @FXML
-    public void btnEmpezar(ActionEvent actionEvent) {
+    /*public void btnEmpezar(ActionEvent actionEvent) {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.01), (ActionEvent ae) -> {
 
             MovimientoGeneral.mover(barcoRojo);
@@ -106,7 +126,7 @@ public class HelloController {
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-    }
+    }*/
 
     public void equipoGanador() {
         Platform.runLater(()->{
