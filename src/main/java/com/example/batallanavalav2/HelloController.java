@@ -12,140 +12,173 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class HelloController {
 
-    private double speed = 5; // 5 pixels per unit of time
-    private double xDirection = 1; // 1 for right, -1 for left
-    private double yDirection = 1; // 1 for down, -1 for up
-    private double windowWidth;
-    private double windowHeight;
-    private Timeline timeline;
-    private Random random;
-    private Image imagenFondo;
-    @FXML
-    private AnchorPane principal;
-
-    private AnchorPane equipoAzul;
-    private AnchorPane equipoRojo;
-    private AnchorPane marcaGlobal;
-
-    private Barcos barcoRojo;
-    private Barcos barcoAzul;
-
-    ControlDeJuego controlDeJuego;
-    @FXML
-    private AnchorPane azul;
-    @FXML
-    private AnchorPane rojo;
     @FXML
     private AnchorPane ventana;
-
-    public void initialize() {
-        controlDeJuego = new ControlDeJuego();
-
-        Image imagenFondo = new Image(getClass().getResourceAsStream("imagenes/water.jpg"));
-        ImageView background = new ImageView(imagenFondo);
-
-        principal.setBackground(new Background(new BackgroundImage(background.getImage(),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT)));
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        ImageView destructorRojo = new ImageView();
-        destructorRojo.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorRojo.png")));
-        destructorRojo.setLayoutX(28);
-        destructorRojo.setLayoutY(371);
-
-        barcoRojo = new Barcos("destructor", destructorRojo, "Rojo", controlDeJuego.getBarcos(), ventana);
-        controlDeJuego.aniadirBarcos(barcoRojo);
-
-
-        ImageView destructorAzul = new ImageView();
-        destructorAzul.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorAzul.png")));
-        destructorAzul.setLayoutX(250);
-        destructorAzul.setLayoutY(371);
-
-        barcoAzul = new Barcos("destructor", destructorAzul, "Azul", controlDeJuego.getBarcos(), ventana);
-        controlDeJuego.aniadirBarcos(barcoAzul);
-
-        principal.getChildren().addAll(barcoRojo.getImagenBarco(), barcoAzul.getImagenBarco());
-    }
     @FXML
-    /*public void btnEmpezar(ActionEvent actionEvent) {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.01), (ActionEvent ae) -> {
+    private AnchorPane anchorUSA;
+    @FXML
+    private AnchorPane anchorES;
+    @FXML
+    private AnchorPane globalMark;
 
-            MovimientoGeneral.mover(barcoRojo);
-            MovimientoGeneral.detectarBordes(barcoRojo);
-            if (MovimientoGeneral.detectarBarcos(barcoRojo, barcoAzul)) {
+    Barcos lanchaES;
+    Barcos acorazadoES;
+    Barcos destructorES;
+    Barcos submarinoES;
 
-                int disparo = barcoRojo.shoot();
-                System.out.println(barcoRojo.getNombreBarco() + " dispara a: " + barcoAzul.getNombreBarco() + " y le quita: " + disparo);
-                barcoAzul.setVida(barcoAzul.getVida() - disparo);
+    Barcos lanchaUSA;
+    Barcos acorazadoUSA;
+    Barcos destructorUSA;
+    Barcos submarinoUSA;
 
-                if (barcoAzul.getVida() <= 0) {
+    ControlDeJuego control;
+    MediaPlayer mediaPlayer;
+    List<Integer> posicionBarco = new ArrayList<>();
 
-                    System.out.println("el " + barcoAzul.getNombreBarco() + " muere");
-                    principal.getChildren().remove(barcoAzul.getImagenBarco());
-                    equipoGanador();
+    public void initialize(){
+        Image fondo = new Image(getClass().getResourceAsStream("imagenes/water.jpg"));
+        ImageView back = new ImageView(fondo);
+        ventana.setBackground(new Background(new BackgroundImage(back.getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        iniciarMusica();
+        creacionBarcos();
+    }
+
+    public void creacionBarcos(){
+        posicionBarco.add(1);
+        posicionBarco.add(2);
+        posicionBarco.add(3);
+        posicionBarco.add(4);
+
+        Collections.shuffle(posicionBarco);
+        control = new ControlDeJuego();
+
+        //Destructor Azul
+        /*ImageView imagenDestructor = new ImageView();
+        imagenDestructor.setImage(new Image(getClass().getResourceAsStream("")));*/
+
+        //Lancha España
+        ImageView imagenLancha = new ImageView();
+        imagenLancha.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorRojo.png")));
+        posicionRojo(imagenLancha, posicionBarco.remove(0));
+        control.aniadirBarcos(lanchaES = new Barcos("lancha", "Rojo", imagenLancha, control.getBarcos(), ventana));
+
+        //Acorazado España
+        ImageView imagenAcorazado = new ImageView();
+        imagenAcorazado.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorRojo.png")));
+        posicionRojo(imagenAcorazado, posicionBarco.remove(0));
+        control.aniadirBarcos(acorazadoES = new Barcos("acorazado", "Rojo", imagenAcorazado, control.getBarcos(), ventana));
+
+        //Destructor España
+        ImageView imagenDestructor = new ImageView();
+        imagenDestructor.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorRojo.png")));
+        posicionRojo(imagenAcorazado,posicionBarco.remove(0));
+        control.aniadirBarcos(destructorES = new Barcos("destructor", "Rojo", imagenDestructor, control.getBarcos(), ventana));
+
+        //Submarino España
+        ImageView imagenSubmarino = new ImageView();
+        imagenSubmarino.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorRojo.png")));
+        posicionRojo(imagenSubmarino, posicionBarco.remove(0));
+        control.aniadirBarcos(submarinoES = new Barcos("submarino", "Rojo", imagenSubmarino, control.getBarcos(), ventana));
+
+        posicionBarco.add(1);
+        posicionBarco.add(2);
+        posicionBarco.add(3);
+        posicionBarco.add(4);
+        Collections.shuffle(posicionBarco);
+
+        //Lancha USA
+        ImageView imagenLancha2 = new ImageView();
+        imagenLancha2.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorAzul.png")));
+        posicionAzul(imagenLancha2, posicionBarco.remove(0));
+        control.aniadirBarcos(lanchaUSA = new Barcos("lancha", "Azul", imagenLancha2, control.getBarcos(), ventana));
+
+        //Acorazado USA
+        ImageView imagenAcorazado2 = new ImageView();
+        imagenAcorazado2.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorAzul.png")));
+        posicionAzul(imagenAcorazado2, posicionBarco.remove(0));
+        control.aniadirBarcos(acorazadoUSA = new Barcos("acorazado", "Azul", imagenAcorazado2, control.getBarcos(), ventana));
+
+        //Destructor USA
+        ImageView imagenDestructor2 = new ImageView();
+        imagenDestructor2.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorAzul.png")));
+        posicionAzul(imagenAcorazado2,posicionBarco.remove(0));
+        control.aniadirBarcos(destructorUSA = new Barcos("destructor", "Azul", imagenDestructor2, control.getBarcos(), ventana));
+
+        //Submarino USA
+        ImageView imagenSubmarino2 = new ImageView();
+        imagenSubmarino2.setImage(new Image(getClass().getResourceAsStream("imagenes/destructorAzul.png")));
+        posicionAzul(imagenSubmarino2, posicionBarco.remove(0));
+        control.aniadirBarcos(submarinoUSA = new Barcos("submarino", "Azul", imagenSubmarino2, control.getBarcos(), ventana));
 
 
-                } else {
-                    System.out.println("Al " + barcoAzul.getNombreBarco() + " le queda: " + barcoAzul.getVida() + " de vida.");
-
-                }
-
-            }
+        ventana.getChildren().addAll(lanchaES.getImagen(), acorazadoES.getImagen(), destructorES.getImagen(), submarinoES.getImagen(),
+                lanchaUSA.getImagen(), acorazadoUSA.getImagen(), destructorUSA.getImagen(), submarinoUSA.getImagen());
 
 
-            MovimientoGeneral.mover(barcoAzul);
-            MovimientoGeneral.detectarBordes(barcoAzul);
 
-            if (MovimientoGeneral.detectarBarcos(barcoAzul, barcoRojo)) {
+        control.ganador();
 
-                int disparo = barcoAzul.shoot();
-                System.out.println(barcoAzul.getNombreBarco() + " dispara a: " + barcoRojo.getNombreBarco() + " y le quita: " + disparo);
-                barcoRojo.setVida(barcoRojo.getVida() - disparo);
+    }
 
-                if (barcoRojo.getVida() <= 0) {
+    public void posicionRojo(ImageView imagen, int num){
+        if(num==1){
+            imagen.setLayoutX(28);
+            imagen.setLayoutY(371);
+        }
+        if(num==2){
+            imagen.setLayoutX(28);
+            imagen.setLayoutY(75);
+        }
+        if(num==3){
+            imagen.setLayoutX(28);
+            imagen.setLayoutY(149);
+        }
+        if(num==4){
+            imagen.setLayoutX(28);
+            imagen.setLayoutY(575);
+        }
+    }
 
-                    System.out.println("el " + barcoRojo.getNombreBarco() + " muere");
-                    principal.getChildren().remove(barcoRojo.getImagenBarco());
+    public void posicionAzul(ImageView imagen, int num) {
 
+        if (num == 1) {
+            imagen.setLayoutX(882);
+            imagen.setLayoutY(371);
+        }
 
-                } else {
-                    System.out.println("Al " + barcoRojo.getNombreBarco() + " le queda: " + barcoRojo.getVida() + " de vida.");
+        if (num == 2) {
+            imagen.setLayoutX(876);
+            imagen.setLayoutY(75);
+        }
 
-                }
-            }
-        }));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
-    }*/
+        if (num == 3) {
+            imagen.setLayoutX(876);
+            imagen.setLayoutY(147);
+        }
 
-    public void equipoGanador() {
+        if (num == 4) {
+            imagen.setLayoutX(876);
+            imagen.setLayoutY(575);
+        }
+
+    }
+
+    public void iniciarMusica(){
         Platform.runLater(()->{
-
-
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setHeaderText(null);
-            alert.setTitle("Confirmación");
-            alert.setContentText("¿Estas seguro de confirmar la acción?");
-            Optional<ButtonType> action = alert.showAndWait();
-
-            if (action.get() == ButtonType.OK) {
-                System.out.println("Borrar");
-            } else {
-                System.out.println("no Borrar");
-            }
-
+            Media pick = new Media(this.getClass().getResource("Sonidos/musicaFondo.mp3").toString());
+            mediaPlayer = new MediaPlayer(pick);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.setVolume(0.45);
+            mediaPlayer.play();
         });
     }
 }

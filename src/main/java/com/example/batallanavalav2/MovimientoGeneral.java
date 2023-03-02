@@ -4,93 +4,93 @@ import java.util.Random;
 
 public class MovimientoGeneral {
     public static void mover(Barcos barcos) {
-        double x = barcos.getImagenBarco().getLayoutX();
-        double y = barcos.getImagenBarco().getLayoutY();
+        double x = barcos.getImagen().getLayoutX();
+        double y = barcos.getImagen().getLayoutY();
         double velocidad = barcos.getVelocidad();
-        double direccion = Math.toRadians(barcos.getDirection());
+        double direccion = Math.toRadians(barcos.getDireccion());
         x += velocidad * Math.cos(direccion);
         y += velocidad * Math.sin(direccion);
-        barcos.getImagenBarco().setLayoutX(x);
-        barcos.getImagenBarco().setLayoutY(y);
-        barcos.getImagenBarco().setRotate(barcos.getDirection());
+        barcos.getImagen().setLayoutX(x);
+        barcos.getImagen().setLayoutY(y);
+        barcos.getImagen().setRotate(barcos.getDireccion());
     }
 
     public static void detectarBordes(Barcos barco) {
-        double x = barco.getImagenBarco().getLayoutX();
-        double y = barco.getImagenBarco().getLayoutY();
+        double EjeX = barco.getImagen().getLayoutX();
+        double EjeY = barco.getImagen().getLayoutY();
 
-        if (barco.getNombreBarco().equals("destructor")) {
+        if (barco.getNombre().equals("destructor")) {
             Random random = new Random();
             int randomNumber = random.nextInt(10) + 1;
             if (randomNumber <= 5) {
-                if (x < 0 || x > AnchuraVentana.ANCHO_VENTANA_Destructor) {
-                    barco.setDirection(180 + barco.getDirection());
+                if (EjeX < 0 || EjeX > 970) {
+                    barco.setDireccion(180 + barco.getDireccion());
                 }
-                if (y < 0 || y > AnchuraVentana.ALTO_VENTANA_Destructor) {
-                    barco.setDirection(180 + barco.getDirection());
+                if (EjeY < 0 || EjeY > 670) {
+                    barco.setDireccion(180 + barco.getDireccion());
                 }
             } else {
-                if (x < 0 || x > AnchuraVentana.ANCHO_VENTANA_Destructor) {
-                    barco.setDirection(-180 + barco.getDirection());
+                if (EjeX < 0 || EjeX > 970) {
+                    barco.setDireccion(180 - barco.getDireccion());
                 }
-                if (y < 0 || y > AnchuraVentana.ALTO_VENTANA_Destructor) {
-                    barco.setDirection(-barco.getDirection());
+                if (EjeY < 0 || EjeY > 670) {
+                    barco.setDireccion(-barco.getDireccion());
                 }
             }
         } else {
-            if (barco.getNombreBarco().equals("submarino")) {
+            if (barco.getNombre().equals("submarino")) {
                 Random random = new Random();
                 int randomNumber = random.nextInt(10) + 1;
-                if (randomNumber >= 5) {
-                    if (x < 0 || x > AnchuraVentana.ANCHO_VENTANA_Submarino) {
-                        barco.setDirection(180 + barco.getDirection());
+                if (randomNumber <= 5) {
+                    if (EjeX < 0 || EjeX > 970) {
+                        barco.setDireccion(180 + barco.getDireccion());
                     }
-                    if (y < 0 || y > AnchuraVentana.ALTO_VENTANA_Submarino) {
-                        barco.setDirection(180 + barco.getDirection());
+                    if (EjeY < 0 || EjeY > 670) {
+                        barco.setDireccion(180 + barco.getDireccion());
                     }
                 } else {
-                    if (x < 0 || x > AnchuraVentana.ANCHO_VENTANA_Submarino) {
-                        barco.setDirection(180 - barco.getDirection());
+                    if (EjeX < 0 || EjeX > 970) {
+                        barco.setDireccion(180 - barco.getDireccion());
                     }
-                    if (y < 0 || y > AnchuraVentana.ALTO_VENTANA_Submarino) {
-                        barco.setDirection(-barco.getDirection());
+                    if (EjeY < 0 || EjeY > 670) {
+                        barco.setDireccion(-barco.getDireccion());
                     }
                 }
             } else {
-                if (barco.getNombreBarco().equals("lancha")) {
+                if (barco.getNombre().equals("lancha")) {
                     Random random = new Random();
                     int randomNumber = random.nextInt(10) + 1;
                     if (randomNumber <= 5) {
-                        if (x < 0 || x > AnchuraVentana.ALTO_VENTANA_Lancha) {
-                            barco.setDirection(180 + barco.getDirection());
+                        if (EjeX < 0 || EjeX > 970) {
+                            barco.setDireccion(180 + barco.getDireccion());
                         }
-                        if (y < 0 || y > AnchuraVentana.ALTO_VENTANA_Lancha) {
-                            barco.setDirection(180 + barco.getDirection());
+                        if (EjeY < 0 || EjeY > 670) {
+                            barco.setDireccion(180 + barco.getDireccion());
                         }
                     } else {
-                        if (x < 0 || x > AnchuraVentana.ALTO_VENTANA_Lancha) {
-                            barco.setDirection(180 - barco.getDirection());
+                        if (EjeX < 0 || EjeX > 970) {
+                            barco.setDireccion(180 - barco.getDireccion());
                         }
-                        if (y < 0 || y > AnchuraVentana.ALTO_VENTANA_Lancha) {
-                            barco.setDirection(-barco.getDirection());
+                        if (EjeY < 0 || EjeY > 670) {
+                            barco.setDireccion(-barco.getDireccion());
                         }
                     }
                 } else {
                     Random random = new Random();
                     int randomNumber = random.nextInt(10) + 1;
                     if (randomNumber <= 5) {
-                        if (x < 0 || x > AnchuraVentana.ALTO_VENTANA_Acorazado) {
-                            barco.setDirection(180 + barco.getDirection());
+                        if (EjeX < 0 || EjeX > 970) {
+                            barco.setDireccion(180 + barco.getDireccion());
                         }
-                        if (y < 0 || y > AnchuraVentana.ALTO_VENTANA_Acorazado) {
-                            barco.setDirection(180 + barco.getDirection());
+                        if (EjeY < 0 || EjeY > 670) {
+                            barco.setDireccion(180 + barco.getDireccion());
                         }
                     } else {
-                        if (x < 0 || x > AnchuraVentana.ALTO_VENTANA_Acorazado) {
-                            barco.setDirection(180 - barco.getDirection());
+                        if (EjeX < 0 || EjeX > 970) {
+                            barco.setDireccion(180 - barco.getDireccion());
                         }
-                        if (y < 0 || y > AnchuraVentana.ALTO_VENTANA_Acorazado) {
-                            barco.setDirection(-barco.getDirection());
+                        if (EjeY < 0 || EjeY > 670) {
+                            barco.setDireccion(-barco.getDireccion());
                         }
                     }
                 }
@@ -99,10 +99,10 @@ public class MovimientoGeneral {
     }
 
     public static double coordenadasDosBarcos(Barcos barcos1, Barcos barcos2) {
-        double x1 = barcos1.getImagenBarco().getLayoutX();
-        double y1 = barcos1.getImagenBarco().getLayoutY();
-        double x2 = barcos2.getImagenBarco().getLayoutX();
-        double y2 = barcos2.getImagenBarco().getLayoutY();
+        double x1 = barcos1.getImagen().getLayoutX();
+        double y1 = barcos1.getImagen().getLayoutY();
+        double x2 = barcos2.getImagen().getLayoutX();
+        double y2 = barcos2.getImagen().getLayoutY();
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
@@ -112,6 +112,6 @@ public class MovimientoGeneral {
     }
 
     public static void rotar(Barcos barcos, double grados) {
-        barcos.getImagenBarco().setRotate(barcos.getImagenBarco() .getRotate() + grados);
+        barcos.getImagen().setRotate(barcos.getImagen() .getRotate() + grados);
     }
 }
